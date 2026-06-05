@@ -83,7 +83,10 @@ export async function login(req, res) {
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.rows[0].password);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.rows[0].password
+    );
 
     if (!isMatch) {
       return res.status(400).json({
@@ -107,4 +110,11 @@ export async function login(req, res) {
       error: error.message,
     });
   }
+}
+
+export async function me(req, res) {
+  res.json({
+    message: "Protected route working.",
+    user: req.user,
+  });
 }
