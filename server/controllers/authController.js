@@ -70,7 +70,7 @@ export async function login(req, res) {
 
     const user = await pool.query(
       `
-      SELECT id, email, password, role, status
+      SELECT id, name, email, password, role, status
       FROM users
       WHERE email = $1
       `,
@@ -83,10 +83,7 @@ export async function login(req, res) {
       });
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.rows[0].password
-    );
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -99,6 +96,7 @@ export async function login(req, res) {
       token: generateToken(user.rows[0].id),
       user: {
         id: user.rows[0].id,
+        name: user.rows[0].name,
         email: user.rows[0].email,
         role: user.rows[0].role,
         status: user.rows[0].status,
